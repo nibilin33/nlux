@@ -127,7 +127,10 @@ export const AiChat: <AiMsg>(
         // Effect used to wait for the 'submitting-conversation-starter' status to submit the prompt
         if (composerStatus === 'submitting-conversation-starter' || composerStatus === 'submitting-external-message'
             || composerStatus === 'submitting-edit') {
-            handleSubmitPrompt();
+                setTimeout(() => {
+                    // fix segments update in wechat environment
+                    handleSubmitPrompt();
+                }, 0);
         }
     }, [composerStatus, handleSubmitPrompt]);
 
