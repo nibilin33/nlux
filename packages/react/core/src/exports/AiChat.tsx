@@ -189,7 +189,7 @@ export const AiChat: <AiMsg>(
 
     // UI overrides
     const uiOverrides = useUiOverrides(props);
-
+    console.log(uiOverrides);
     // Variables that do not require memoization or effect
     const hasValidInput = prompt.length > 0;
     const compChatRoomStatusClassName = segments.length === 0 ? 'nlux-chatRoom-starting' : 'nlux-chatRoom-active';
@@ -231,6 +231,7 @@ export const AiChat: <AiMsg>(
                         />
                     </div>
                     <div className="nlux-composer-container">
+                        {uiOverrides.Tool}
                         <ComposerComp
                             status={composerStatus}
                             prompt={prompt}
@@ -243,7 +244,9 @@ export const AiChat: <AiMsg>(
                             onSubmit={handleSubmitPrompt}
                             onCancel={cancelLastMessageRequest}
                             Loader={uiOverrides.Loader}
+                            CancelButton={uiOverrides.CancelButton}
                         />
+                        {uiOverrides.ToolBottom}
                     </div>
                 </div>
             </div>

@@ -20,4 +20,6 @@ export type ComposerProps = {
 
     // UI Overrides
     Loader: ReactElement;
+
+    CancelButton?: ReactElement;
 };

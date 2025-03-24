@@ -27,7 +27,8 @@ export const ComposerComp = (props: ComposerProps) => {
     const hideCancelButton = props.hideStopButton === true;
     const showCancelButton = !hideCancelButton && (submittingPromptStatuses.includes(props.status) || props.status
         === 'waiting');
-
+    const showCustomCancelButton = props.CancelButton !== undefined && (submittingPromptStatuses.includes(props.status) || props.status
+    === 'waiting');
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     useEffect(() => {
         if (props.status === 'typing' && props.autoFocus && textareaRef.current) {
@@ -81,15 +82,18 @@ export const ComposerComp = (props: ComposerProps) => {
                 aria-label={props.placeholder}
             />
             {!showCancelButton && (
-                <button
-                    tabIndex={0}
-                    disabled={disableButton}
-                    onClick={() => props.onSubmit()}
-                    aria-label="Send"
-                >
-                    {showSendIcon && <SendIconComp/>}
-                    {!showSendIcon && props.Loader}
-                </button>
+                <>
+                   <button
+                        tabIndex={0}
+                        disabled={disableButton}
+                        onClick={() => props.onSubmit()}
+                        aria-label="Send"
+                    >
+                        {showSendIcon && <SendIconComp/>}
+                        {!showSendIcon && props.Loader}
+                    </button>
+                    {showCustomCancelButton && props.CancelButton}
+                </>
             )}
             {showCancelButton && (
                 <button
