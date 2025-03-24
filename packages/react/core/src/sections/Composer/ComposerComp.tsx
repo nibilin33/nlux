@@ -1,4 +1,5 @@
 import {className as compComposerClassName} from '@shared/components/Composer/create';
+import {useState} from 'react';
 import {ComposerStatus} from '@shared/components/Composer/props';
 import {
     statusClassName as compComposerStatusClassName,
@@ -30,6 +31,7 @@ export const ComposerComp = (props: ComposerProps) => {
     const showCustomCancelButton = props.CancelButton !== undefined && (submittingPromptStatuses.includes(props.status) || props.status
     === 'waiting');
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const [initialHeight, setInitialHeight] = useState(0);
     useEffect(() => {
         if (props.status === 'typing' && props.autoFocus && textareaRef.current) {
             textareaRef.current.focus();
@@ -42,6 +44,10 @@ export const ComposerComp = (props: ComposerProps) => {
 
     const handleSubmit = useMemo(() => () => {
         props.onSubmit?.();
+        const textarea = textareaRef.current;
+        if (textarea) {
+            textarea.style.height = `${initialHeight}px`;
+        }
     }, [props.onSubmit]);
 
     const handleKeyDown = useMemo(() => (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -55,6 +61,7 @@ export const ComposerComp = (props: ComposerProps) => {
         if (!textareaRef.current) {
             return;
         }
+        setInitialHeight(textareaRef.current.scrollHeight);
         const adjustHeight = () => {
             const textarea = textareaRef.current;
             if (textarea) {

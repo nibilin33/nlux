@@ -189,7 +189,6 @@ export const AiChat: <AiMsg>(
 
     // UI overrides
     const uiOverrides = useUiOverrides(props);
-    console.log(uiOverrides);
     // Variables that do not require memoization or effect
     const hasValidInput = prompt.length > 0;
     const compChatRoomStatusClassName = segments.length === 0 ? 'nlux-chatRoom-starting' : 'nlux-chatRoom-active';
