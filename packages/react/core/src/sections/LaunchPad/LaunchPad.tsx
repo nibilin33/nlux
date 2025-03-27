@@ -93,6 +93,7 @@ export const LaunchPad: LaunchPadCompType = (props) => {
             <div className="nlux-conversationStarters-container">
                 {showConversationStarters && (
                     <ConversationStarters
+                        hint={conversationOptions!.hint ?? ''}
                         items={conversationOptions!.conversationStarters ?? []}
                         onConversationStarterSelected={props.onConversationStarterSelected}
                     />

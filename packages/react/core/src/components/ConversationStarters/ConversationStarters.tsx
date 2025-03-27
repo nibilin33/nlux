@@ -2,9 +2,10 @@ import {ConversationStarter} from '../../types/conversationStarter';
 import {ConversationStartersProps} from './props';
 
 export const ConversationStarters = (props: ConversationStartersProps) => {
-    const {onConversationStarterSelected} = props;
+    const {onConversationStarterSelected,hint} = props;
     return (
         <div className="nlux-comp-conversationStarters">
+            {!!hint && <div className="nlux-comp-conversationStarters-hint">{hint}</div>}
             {props.items.map((conversationStarter, index) => (
                 <button
                     key={index}

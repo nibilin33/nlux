@@ -7,4 +7,5 @@ export type ConversationOptions = Omit<CoreConversationOptions, 'conversationSta
      * Conversation starters are only displayed when the conversation is empty, and no conversation history is present.
      */
     conversationStarters?: ConversationStarter[];
+    hint?: string;
 }
