@@ -8,6 +8,8 @@ export type AiChatApi = {
      * API methods related to sending messages.
      */
     composer: {
+        sendbtn: () => void;
+        fill: (message: string) => void;
         /**
          * Types the message in the composer and sends it to the chat adapter automatically.
          *
@@ -37,11 +39,14 @@ export type AiChatApi = {
 export type AiChatInternalApi = AiChatApi & {
     __setHost: (host: AiChatHost) => void;
     __unsetHost: () => void;
+    __getHost: () => AiChatHost;
 };
 
 export type AiChatHost = {
     sendMessage: (prompt: string) => void;
+    fillMessage: (message: string) => void;
     resetConversation: () => void;
+    sendbtn: () => void;
     cancelLastMessageRequest: () => void;
 };
 
@@ -49,10 +54,16 @@ const createVoidInternalApi = (setHost: (host: AiChatHost) => void = () => {
 }): AiChatInternalApi => {
     return {
         composer: {
+            sendbtn: () => {
+                throw new Error('AiChatApi is not connected to a host <AiChat /> component.');
+            },
             send: (prompt: string) => {
                 throw new Error('AiChatApi is not connected to a host <AiChat /> component.');
             },
             cancel: () => {
+                throw new Error('AiChatApi is not connected to a host <AiChat /> component.');
+            },
+            fill: (message: string) => {
                 throw new Error('AiChatApi is not connected to a host <AiChat /> component.');
             },
         },
@@ -70,6 +81,10 @@ const createVoidInternalApi = (setHost: (host: AiChatHost) => void = () => {
 
         // @ts-ignore
         __unsetHost: () => {
+            // Do nothing
+        },
+        // @ts-ignore
+        __getHost: () => {
             // Do nothing
         },
     };
@@ -99,7 +114,12 @@ export const useAiChatApi = (): AiChatApi => {
 
         currentHost.current.cancelLastMessageRequest();
     };
-
+    api.current.composer.fill = (message: string) => {
+        if (!currentHost.current) {
+            throw new Error('AiChatApi is not connected to a host <AiChat /> component.');
+        }
+        currentHost.current.fillMessage(message);
+    }
     api.current.conversation.reset = () => {
         if (!currentHost.current) {
             throw new Error('AiChatApi is not connected to a host <AiChat /> component.');
@@ -107,7 +127,12 @@ export const useAiChatApi = (): AiChatApi => {
 
         currentHost.current.resetConversation();
     };
-
+    api.current.composer.sendbtn = () => {
+        if (!currentHost.current) {
+            throw new Error('AiChatApi is not connected to a host <AiChat /> component.');
+        }
+        currentHost.current.sendbtn();
+    };
     // @ts-ignore
     api.current.__setHost = (host: AiChatHost) => {
         currentHost.current = host;
@@ -117,6 +142,12 @@ export const useAiChatApi = (): AiChatApi => {
     api.current.__unsetHost = () => {
         currentHost.current = null;
     };
-
+    // @ts-ignore
+    api.current.__getHost = () => {
+        if (!currentHost.current) {
+            throw new Error('AiChatApi is not connected to a host <AiChat /> component.');
+        }
+        return currentHost.current;
+    };
     return api.current;
 };

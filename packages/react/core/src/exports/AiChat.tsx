@@ -113,6 +113,12 @@ export const AiChat: <AiMsg>(
 
     const handleConversationStarterSelected = useCallback(
         (conversationStarter: ConversationStarter) => {
+            // 如果当前就是submitting-conversation-starter 
+            if (composerStatus === 'submitting-conversation-starter' || composerStatus === 'submitting-external-message'
+            || composerStatus === 'submitting-edit') {
+                internalApiRef.current?.composer.cancel();
+                internalApiRef.current?.conversation.reset();
+            }
             setPrompt(conversationStarter.prompt);
             setComposerStatus('submitting-conversation-starter');
         },
@@ -152,9 +158,15 @@ export const AiChat: <AiMsg>(
 
         if (typeof internalApi?.__setHost === 'function') {
             internalApi.__setHost({
+                sendbtn: () => {
+                    handleSubmitPrompt();
+                },
                 sendMessage: (prompt: string) => {
                     setPrompt(prompt);
                     setComposerStatus('submitting-external-message');
+                },
+                fillMessage: (message: string) => {
+                    setPrompt(message);
                 },
                 resetConversation: () => {
                     setChatSegments([]);
